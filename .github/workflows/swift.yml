@@ -13,35 +13,36 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Verify Environment & Locate Project
+    - name: Locate Project Root
       run: |
-        echo "=== Locating T9Keyboard.xcodeproj ==="
-        PROJ=$(find . -name "T9Keyboard.xcodeproj" -type d | head -n 1)
-        if [ -z "$PROJ" ]; then
-          echo "Error: T9Keyboard.xcodeproj tidak ditemukan di repository!"
+        SPEC_FILE=$(find . -name "project.yml" | head -n 1)
+        if [ -z "$SPEC_FILE" ]; then
+          echo "Error: project.yml tidak ditemukan!"
           find . -maxdepth 3
           exit 1
         fi
-        echo "Project path: $PROJ"
-        echo "PROJ_PATH=$PROJ" >> $GITHUB_ENV
-        echo "PROJ_DIR=$(dirname "$PROJ")" >> $GITHUB_ENV
+        PROJECT_DIR=$(dirname "$SPEC_FILE")
+        echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+        echo "Project directory is at: $PROJECT_DIR"
 
-    - name: Check Xcode & Project Targets
+    - name: Install XcodeGen
       run: |
-        xcodebuild -version
-        xcodebuild -list -project "$PROJ_PATH"
+        brew install xcodegen
 
-    - name: Build App & Extension (Unsigned)
+    - name: Generate Native Apple Xcode Project
       run: |
-        cd "$PROJ_DIR"
-        mkdir -p build/Release-iphoneos
-        
-        # Build menggunakan xcodebuild tanpa code signing
+        cd "$PROJECT_DIR"
+        xcodegen generate
+
+    - name: Build App with Xcode
+      run: |
+        cd "$PROJECT_DIR"
         xcodebuild clean build \
           -project T9Keyboard.xcodeproj \
-          -target T9Keyboard \
+          -scheme T9Keyboard \
           -configuration Release \
           -sdk iphoneos \
+          -destination 'generic/platform=iOS' \
           CONFIGURATION_BUILD_DIR="$(pwd)/build/Release-iphoneos" \
           CODE_SIGNING_ALLOWED=NO \
           CODE_SIGNING_REQUIRED=NO \
@@ -50,9 +51,14 @@ jobs:
 
     - name: Package Unsigned IPA
       run: |
-        cd "$PROJ_DIR"
+        cd "$PROJECT_DIR"
         mkdir -p Payload
         cp -R build/Release-iphoneos/T9Keyboard.app Payload/
+        
+        # Pastikan folder PlugIns berisi ekstensi keyboard
+        mkdir -p Payload/T9Keyboard.app/PlugIns
+        cp -R build/Release-iphoneos/T9KeyboardExtension.appex Payload/T9Keyboard.app/PlugIns/ 2>/dev/null || true
+        
         zip -r T9Keyboard.ipa Payload
         mv T9Keyboard.ipa "$GITHUB_WORKSPACE/"
 
