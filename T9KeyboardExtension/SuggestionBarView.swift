@@ -85,7 +85,9 @@ class SuggestionBarView: UIView {
                 button.setTitleColor(UIColor.label, for: .normal)
             }
             
-            button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
+            var config = UIButton.Configuration.plain()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
+            button.configuration = config
             button.backgroundColor = UIColor.secondarySystemFill
             button.layer.cornerRadius = 6
             button.clipsToBounds = true
