@@ -1,0 +1,415 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2001 /* AppDelegate.swift */; };
+		1002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2002 /* SceneDelegate.swift */; };
+		1003 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2003 /* ViewController.swift */; };
+		1004 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2004 /* LaunchScreen.storyboard */; };
+		1005 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2005 /* KeyboardViewController.swift */; };
+		1006 /* T9Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2006 /* T9Engine.swift */; };
+		1007 /* T9KeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2007 /* T9KeyButton.swift */; };
+		1008 /* SuggestionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2008 /* SuggestionBarView.swift */; };
+		1009 /* DictionaryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009 /* DictionaryData.swift */; };
+		1010 /* T9KeyboardExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3002 /* T9KeyboardExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8002;
+			remoteInfo = T9KeyboardExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5001 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1010 /* T9KeyboardExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2003 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2004 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2005 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		2006 /* T9Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9Engine.swift; sourceTree = "<group>"; };
+		2007 /* T9KeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9KeyButton.swift; sourceTree = "<group>"; };
+		2008 /* SuggestionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionBarView.swift; sourceTree = "<group>"; };
+		2009 /* DictionaryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryData.swift; sourceTree = "<group>"; };
+		2010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3001 /* T9Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = T9Keyboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3002 /* T9KeyboardExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = T9KeyboardExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7001 = {
+			isa = PBXGroup;
+			children = (
+				7002 /* T9Keyboard */,
+				7003 /* T9KeyboardExtension */,
+				7004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7002 /* T9Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				2001 /* AppDelegate.swift */,
+				2002 /* SceneDelegate.swift */,
+				2003 /* ViewController.swift */,
+				2004 /* LaunchScreen.storyboard */,
+				2010 /* Info.plist */,
+			);
+			path = T9Keyboard;
+			sourceTree = "<group>";
+		};
+		7003 /* T9KeyboardExtension */ = {
+			isa = PBXGroup;
+			children = (
+				2005 /* KeyboardViewController.swift */,
+				2006 /* T9Engine.swift */,
+				2007 /* T9KeyButton.swift */,
+				2008 /* SuggestionBarView.swift */,
+				2009 /* DictionaryData.swift */,
+				2011 /* Info.plist */,
+			);
+			path = T9KeyboardExtension;
+			sourceTree = "<group>";
+		};
+		7004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3001 /* T9Keyboard.app */,
+				3002 /* T9KeyboardExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8001 /* T9Keyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9001 /* Build configuration list for PBXNativeTarget "T9Keyboard" */;
+			buildPhases = (
+				6001 /* Frameworks */,
+				8101 /* Sources */,
+				8201 /* Resources */,
+				5001 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8301 /* PBXTargetDependency */,
+			);
+			name = T9Keyboard;
+			productName = T9Keyboard;
+			productReference = 3001 /* T9Keyboard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8002 /* T9KeyboardExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9002 /* Build configuration list for PBXNativeTarget "T9KeyboardExtension" */;
+			buildPhases = (
+				6002 /* Frameworks */,
+				8102 /* Sources */,
+				8202 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = T9KeyboardExtension;
+			productName = T9KeyboardExtension;
+			productReference = 3002 /* T9KeyboardExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					8001 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					8002 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+				};
+			};
+			buildConfigurationList = 9000 /* Build configuration list for PBXProject "T9Keyboard" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7001;
+			productRefGroup = 7004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8001 /* T9Keyboard */,
+				8002 /* T9KeyboardExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8201 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2004 /* LaunchScreen.storyboard */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8202 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8101 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1001 /* AppDelegate.swift in Sources */,
+				1002 /* SceneDelegate.swift in Sources */,
+				1003 /* ViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8102 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1005 /* KeyboardViewController.swift in Sources */,
+				1006 /* T9Engine.swift in Sources */,
+				1007 /* T9KeyButton.swift in Sources */,
+				1008 /* SuggestionBarView.swift in Sources */,
+				1009 /* DictionaryData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8301 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8002 /* T9KeyboardExtension */;
+			targetProxy = 4001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9101 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9102 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = T9Keyboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.developer.t9keyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9202 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = T9Keyboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.developer.t9keyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9301 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = T9KeyboardExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.developer.t9keyboard.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9302 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = T9KeyboardExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.developer.t9keyboard.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9000 /* Build configuration list for PBXProject "T9Keyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9101 /* Debug */,
+				9102 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9001 /* Build configuration list for PBXNativeTarget "T9Keyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9201 /* Debug */,
+				9202 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9002 /* Build configuration list for PBXNativeTarget "T9KeyboardExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9301 /* Debug */,
+				9302 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0001 /* Project object */;
+}
