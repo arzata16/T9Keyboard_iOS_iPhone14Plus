@@ -1,0 +1,38 @@
+name: T9Keyboard
+options:
+  bundleIdPrefix: com.developer
+  deploymentTarget:
+    iOS: "15.0"
+
+targets:
+  T9Keyboard:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: T9Keyboard
+    dependencies:
+      - target: T9KeyboardExtension
+    settings:
+      base:
+        INFOPLIST_FILE: T9Keyboard/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""
+        AD_HOC_CODE_SIGNING_ALLOWED: YES
+
+  T9KeyboardExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: T9KeyboardExtension
+    settings:
+      base:
+        INFOPLIST_FILE: T9KeyboardExtension/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""
+        AD_HOC_CODE_SIGNING_ALLOWED: YES
