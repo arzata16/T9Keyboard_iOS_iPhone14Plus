@@ -1,0 +1,64 @@
+name: Build iOS T9 Keyboard IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Verify Environment & Locate Project
+      run: |
+        echo "=== Locating T9Keyboard.xcodeproj ==="
+        PROJ=$(find . -name "T9Keyboard.xcodeproj" -type d | head -n 1)
+        if [ -z "$PROJ" ]; then
+          echo "Error: T9Keyboard.xcodeproj tidak ditemukan di repository!"
+          find . -maxdepth 3
+          exit 1
+        fi
+        echo "Project path: $PROJ"
+        echo "PROJ_PATH=$PROJ" >> $GITHUB_ENV
+        echo "PROJ_DIR=$(dirname "$PROJ")" >> $GITHUB_ENV
+
+    - name: Check Xcode & Project Targets
+      run: |
+        xcodebuild -version
+        xcodebuild -list -project "$PROJ_PATH"
+
+    - name: Build App & Extension (Unsigned)
+      run: |
+        cd "$PROJ_DIR"
+        mkdir -p build/Release-iphoneos
+        
+        # Build menggunakan xcodebuild tanpa code signing
+        xcodebuild clean build \
+          -project T9Keyboard.xcodeproj \
+          -target T9Keyboard \
+          -configuration Release \
+          -sdk iphoneos \
+          CONFIGURATION_BUILD_DIR="$(pwd)/build/Release-iphoneos" \
+          CODE_SIGNING_ALLOWED=NO \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGN_IDENTITY="" \
+          AD_HOC_CODE_SIGNING_ALLOWED=YES
+
+    - name: Package Unsigned IPA
+      run: |
+        cd "$PROJ_DIR"
+        mkdir -p Payload
+        cp -R build/Release-iphoneos/T9Keyboard.app Payload/
+        zip -r T9Keyboard.ipa Payload
+        mv T9Keyboard.ipa "$GITHUB_WORKSPACE/"
+
+    - name: Upload IPA Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: T9Keyboard-iPhone14Plus-IPA
+        path: T9Keyboard.ipa
+        retention-days: 7
