@@ -47,51 +47,7 @@ jobs:
     - name: Generate Xcode Project
       run: |
         cd "$BASE_DIR"
-
-        cat > project.yml << 'ENDOFYAML'
-name: T9Keyboard
-options:
-  bundleIdPrefix: com.developer
-  deploymentTarget:
-    iOS: "15.0"
-
-targets:
-  T9Keyboard:
-    type: application
-    platform: iOS
-    deploymentTarget: "15.0"
-    sources:
-      - T9Keyboard
-    dependencies:
-      - target: T9KeyboardExtension
-    settings:
-      base:
-        INFOPLIST_FILE: T9Keyboard/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
-        CODE_SIGNING_ALLOWED: "NO"
-        CODE_SIGNING_REQUIRED: "NO"
-        CODE_SIGN_IDENTITY: ""
-        AD_HOC_CODE_SIGNING_ALLOWED: "YES"
-        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
-
-  T9KeyboardExtension:
-    type: app-extension
-    platform: iOS
-    deploymentTarget: "15.0"
-    sources:
-      - T9KeyboardExtension
-    settings:
-      base:
-        INFOPLIST_FILE: T9KeyboardExtension/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
-        CODE_SIGNING_ALLOWED: "NO"
-        CODE_SIGNING_REQUIRED: "NO"
-        CODE_SIGN_IDENTITY: ""
-        AD_HOC_CODE_SIGNING_ALLOWED: "YES"
-        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
-ENDOFYAML
-
-        echo "=== Generated project.yml ==="
+        echo "=== project.yml content ==="
         cat project.yml
         echo "=== Running XcodeGen ==="
         xcodegen generate
