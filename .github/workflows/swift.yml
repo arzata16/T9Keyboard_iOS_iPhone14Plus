@@ -70,7 +70,9 @@ jobs:
           CODE_SIGN_IDENTITY="" \
           AD_HOC_CODE_SIGNING_ALLOWED=YES \
           SWIFT_TREAT_WARNINGS_AS_ERRORS=NO \
-          GCC_TREAT_WARNINGS_AS_ERRORS=NO
+          GCC_TREAT_WARNINGS_AS_ERRORS=NO \
+          SWIFT_VERSION=5.0 \
+          SWIFT_STRICT_CONCURRENCY=minimal
 
     - name: Package Unsigned IPA
       run: |

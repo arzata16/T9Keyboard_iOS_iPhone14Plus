@@ -17,11 +17,13 @@ targets:
       base:
         INFOPLIST_FILE: T9Keyboard/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGNING_REQUIRED: "NO"
         CODE_SIGN_IDENTITY: ""
-        AD_HOC_CODE_SIGNING_ALLOWED: YES
-        SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+        AD_HOC_CODE_SIGNING_ALLOWED: "YES"
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
+        SWIFT_VERSION: "5.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
 
   T9KeyboardExtension:
     type: app-extension
@@ -33,8 +35,10 @@ targets:
       base:
         INFOPLIST_FILE: T9KeyboardExtension/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGNING_REQUIRED: "NO"
         CODE_SIGN_IDENTITY: ""
-        AD_HOC_CODE_SIGNING_ALLOWED: YES
-        SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+        AD_HOC_CODE_SIGNING_ALLOWED: "YES"
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
+        SWIFT_VERSION: "5.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
