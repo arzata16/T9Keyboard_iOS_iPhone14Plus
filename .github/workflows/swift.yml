@@ -29,13 +29,9 @@ jobs:
 
         ls -la "$BASE_DIR"
 
-    - name: Select Xcode
+    - name: Show Xcode Version
       run: |
-        XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
-        if [ -n "$XCODE_PATH" ]; then
-          sudo xcode-select -s "$XCODE_PATH"
-        fi
-        echo "Using Xcode at: $(xcode-select -p)"
+        echo "Active Xcode: $(xcode-select -p)"
         xcodebuild -version
         xcrun swift --version
 
@@ -47,9 +43,9 @@ jobs:
     - name: Generate Xcode Project
       run: |
         cd "$BASE_DIR"
-        echo "=== project.yml content ==="
+        echo "=== project.yml ==="
         cat project.yml
-        echo "=== Running XcodeGen ==="
+        echo "=== Generating Xcode Project ==="
         xcodegen generate
 
     - name: Build App with Xcode
@@ -60,32 +56,42 @@ jobs:
           -project T9Keyboard.xcodeproj \
           -scheme T9Keyboard \
           -configuration Release \
-          -sdk iphoneos \
           -destination 'generic/platform=iOS' \
-          -arch arm64 \
-          ONLY_ACTIVE_ARCH=NO \
-          CONFIGURATION_BUILD_DIR="$(pwd)/build/Release-iphoneos" \
+          -derivedDataPath build/DerivedData \
           CODE_SIGNING_ALLOWED=NO \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGN_IDENTITY="" \
           AD_HOC_CODE_SIGNING_ALLOWED=YES \
-          SWIFT_TREAT_WARNINGS_AS_ERRORS=NO \
-          GCC_TREAT_WARNINGS_AS_ERRORS=NO \
-          SWIFT_VERSION=5.0 \
-          SWIFT_STRICT_CONCURRENCY=minimal
+          SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
 
     - name: Package Unsigned IPA
       run: |
         cd "$BASE_DIR"
 
-        echo "=== Build output ==="
-        find build -name "*.app" -o -name "*.appex" 2>/dev/null || true
+        echo "=== Searching for built products ==="
+        find build/DerivedData -name "*.app" -o -name "*.appex"
+
+        APP_PATH=$(find build/DerivedData -name "T9Keyboard.app" -type d | head -n 1)
+        if [ -z "$APP_PATH" ]; then
+          echo "Error: T9Keyboard.app tidak ditemukan!"
+          exit 1
+        fi
+        echo "Found App at: $APP_PATH"
 
         mkdir -p Payload
-        cp -R build/Release-iphoneos/T9Keyboard.app Payload/
+        cp -R "$APP_PATH" Payload/
 
+        # Pastikan Extension ada di dalam PlugIns
         mkdir -p Payload/T9Keyboard.app/PlugIns
-        cp -R build/Release-iphoneos/T9KeyboardExtension.appex Payload/T9Keyboard.app/PlugIns/ 2>/dev/null || true
+        EXT_PATH=$(find build/DerivedData -name "T9KeyboardExtension.appex" -type d | head -n 1)
+        if [ -n "$EXT_PATH" ]; then
+          echo "Embedding extension from: $EXT_PATH"
+          cp -R "$EXT_PATH" Payload/T9Keyboard.app/PlugIns/
+        fi
+
+        echo "=== Payload contents ==="
+        ls -la Payload/T9Keyboard.app/
+        ls -la Payload/T9Keyboard.app/PlugIns/ 2>/dev/null || true
 
         zip -r T9Keyboard.ipa Payload
         mv T9Keyboard.ipa "$GITHUB_WORKSPACE/"

@@ -4,6 +4,11 @@ options:
   deploymentTarget:
     iOS: "15.0"
 
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    SWIFT_VERSION: "5.0"
+
 targets:
   T9Keyboard:
     type: application
@@ -11,8 +16,11 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: T9Keyboard
+        excludes:
+          - "Info.plist"
     dependencies:
       - target: T9KeyboardExtension
+        embed: true
     settings:
       base:
         INFOPLIST_FILE: T9Keyboard/Info.plist
@@ -22,8 +30,6 @@ targets:
         CODE_SIGN_IDENTITY: ""
         AD_HOC_CODE_SIGNING_ALLOWED: "YES"
         SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
-        SWIFT_VERSION: "5.0"
-        SWIFT_STRICT_CONCURRENCY: minimal
 
   T9KeyboardExtension:
     type: app-extension
@@ -31,6 +37,8 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: T9KeyboardExtension
+        excludes:
+          - "Info.plist"
     settings:
       base:
         INFOPLIST_FILE: T9KeyboardExtension/Info.plist
@@ -40,5 +48,3 @@ targets:
         CODE_SIGN_IDENTITY: ""
         AD_HOC_CODE_SIGNING_ALLOWED: "YES"
         SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
-        SWIFT_VERSION: "5.0"
-        SWIFT_STRICT_CONCURRENCY: minimal
