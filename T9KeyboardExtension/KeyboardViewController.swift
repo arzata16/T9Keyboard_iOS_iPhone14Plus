@@ -38,8 +38,8 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
         }
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         updateTheme()
     }
     

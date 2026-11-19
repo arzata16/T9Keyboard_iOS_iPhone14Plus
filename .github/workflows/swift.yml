@@ -22,16 +22,15 @@ jobs:
           find . -maxdepth 3
           exit 1
         fi
-        
+
         BASE_DIR=$(dirname "$EXT_DIR")
         echo "Base project directory is: $BASE_DIR"
         echo "BASE_DIR=$BASE_DIR" >> $GITHUB_ENV
-        
+
         ls -la "$BASE_DIR"
 
-    - name: Select Latest Stable Xcode
+    - name: Select Xcode
       run: |
-        # Gunakan Xcode terbaru yang tersedia di runner
         XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
         if [ -n "$XCODE_PATH" ]; then
           sudo xcode-select -s "$XCODE_PATH"
@@ -45,60 +44,62 @@ jobs:
         brew install xcodegen || brew upgrade xcodegen || true
         xcodegen --version
 
-    - name: Generate Native Apple Xcode Project
+    - name: Generate Xcode Project
       run: |
         cd "$BASE_DIR"
-        
-        # Buat project.yml otomatis di folder yang tepat
-        cat << 'EOF' > project.yml
-        name: T9Keyboard
-        options:
-          bundleIdPrefix: com.developer
-          deploymentTarget:
-            iOS: "15.0"
 
-        targets:
-          T9Keyboard:
-            type: application
-            platform: iOS
-            deploymentTarget: "15.0"
-            sources:
-              - T9Keyboard
-            dependencies:
-              - target: T9KeyboardExtension
-            settings:
-              base:
-                INFOPLIST_FILE: T9Keyboard/Info.plist
-                PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
-                CODE_SIGNING_ALLOWED: NO
-                CODE_SIGNING_REQUIRED: NO
-                CODE_SIGN_IDENTITY: ""
-                AD_HOC_CODE_SIGNING_ALLOWED: YES
-                SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+        cat > project.yml << 'ENDOFYAML'
+name: T9Keyboard
+options:
+  bundleIdPrefix: com.developer
+  deploymentTarget:
+    iOS: "15.0"
 
-          T9KeyboardExtension:
-            type: app-extension
-            platform: iOS
-            deploymentTarget: "15.0"
-            sources:
-              - T9KeyboardExtension
-            settings:
-              base:
-                INFOPLIST_FILE: T9KeyboardExtension/Info.plist
-                PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
-                CODE_SIGNING_ALLOWED: NO
-                CODE_SIGNING_REQUIRED: NO
-                CODE_SIGN_IDENTITY: ""
-                AD_HOC_CODE_SIGNING_ALLOWED: YES
-                SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
-        EOF
+targets:
+  T9Keyboard:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - T9Keyboard
+    dependencies:
+      - target: T9KeyboardExtension
+    settings:
+      base:
+        INFOPLIST_FILE: T9Keyboard/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGNING_REQUIRED: "NO"
+        CODE_SIGN_IDENTITY: ""
+        AD_HOC_CODE_SIGNING_ALLOWED: "YES"
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
 
+  T9KeyboardExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - T9KeyboardExtension
+    settings:
+      base:
+        INFOPLIST_FILE: T9KeyboardExtension/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGNING_REQUIRED: "NO"
+        CODE_SIGN_IDENTITY: ""
+        AD_HOC_CODE_SIGNING_ALLOWED: "YES"
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
+ENDOFYAML
+
+        echo "=== Generated project.yml ==="
+        cat project.yml
+        echo "=== Running XcodeGen ==="
         xcodegen generate
 
     - name: Build App with Xcode
       run: |
         cd "$BASE_DIR"
-        
+
         xcodebuild clean build \
           -project T9Keyboard.xcodeproj \
           -scheme T9Keyboard \
@@ -118,17 +119,16 @@ jobs:
     - name: Package Unsigned IPA
       run: |
         cd "$BASE_DIR"
-        
+
         echo "=== Build output ==="
         find build -name "*.app" -o -name "*.appex" 2>/dev/null || true
-        
+
         mkdir -p Payload
         cp -R build/Release-iphoneos/T9Keyboard.app Payload/
-        
-        # Pastikan folder PlugIns berisi ekstensi keyboard
+
         mkdir -p Payload/T9Keyboard.app/PlugIns
         cp -R build/Release-iphoneos/T9KeyboardExtension.appex Payload/T9Keyboard.app/PlugIns/ 2>/dev/null || true
-        
+
         zip -r T9Keyboard.ipa Payload
         mv T9Keyboard.ipa "$GITHUB_WORKSPACE/"
 

@@ -73,32 +73,34 @@ class SuggestionBarView: UIView {
         }
         
         for (index, word) in words.enumerated() {
-            let button = UIButton(type: .system)
-            button.setTitle(word, for: .normal)
+            var config = UIButton.Configuration.plain()
+            config.title = word
+            config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
             
             if index == 0 {
-                // Saran utama diberi aksen bold
-                button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-                button.setTitleColor(tintColor, for: .normal)
+                config.baseForegroundColor = tintColor
+                var titleAttr = AttributeContainer()
+                titleAttr.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+                config.attributedTitle = AttributedString(word, attributes: titleAttr)
             } else {
-                button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-                button.setTitleColor(UIColor.label, for: .normal)
+                config.baseForegroundColor = UIColor.label
+                var titleAttr = AttributeContainer()
+                titleAttr.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+                config.attributedTitle = AttributedString(word, attributes: titleAttr)
             }
             
-            var config = UIButton.Configuration.plain()
-            config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
-            button.configuration = config
-            button.backgroundColor = UIColor.secondarySystemFill
-            button.layer.cornerRadius = 6
-            button.clipsToBounds = true
+            config.background.backgroundColor = UIColor.secondarySystemFill
+            config.background.cornerRadius = 6
             
+            let button = UIButton(configuration: config)
+            button.clipsToBounds = true
             button.addTarget(self, action: #selector(suggestionTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
         }
     }
     
     @objc private func suggestionTapped(_ sender: UIButton) {
-        guard let title = sender.currentTitle else { return }
+        guard let title = sender.configuration?.title ?? sender.currentTitle else { return }
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
         UIDevice.current.playInputClick()
