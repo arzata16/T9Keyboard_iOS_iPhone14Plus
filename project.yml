@@ -21,10 +21,13 @@ targets:
     dependencies:
       - target: T9KeyboardExtension
         embed: true
+        codeSign: false
     settings:
       base:
         INFOPLIST_FILE: T9Keyboard/Info.plist
+        GENERATE_INFOPLIST_FILE: "NO"
         PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
+        CODE_SIGN_STYLE: Manual
         CODE_SIGNING_ALLOWED: "NO"
         CODE_SIGNING_REQUIRED: "NO"
         CODE_SIGN_IDENTITY: ""
@@ -42,9 +45,23 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: T9KeyboardExtension/Info.plist
+        GENERATE_INFOPLIST_FILE: "NO"
         PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "NO"
+        CODE_SIGN_STYLE: Manual
         CODE_SIGNING_ALLOWED: "NO"
         CODE_SIGNING_REQUIRED: "NO"
         CODE_SIGN_IDENTITY: ""
         AD_HOC_CODE_SIGNING_ALLOWED: "YES"
         SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
+
+schemes:
+  T9Keyboard:
+    build:
+      targets:
+        T9Keyboard: all
+        T9KeyboardExtension: [run, test, profile, analyze, archive]
+    run:
+      config: Release
+    archive:
+      config: Release
