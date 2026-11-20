@@ -68,7 +68,7 @@ Pada iOS 16, 17, dan 18 terbaru, Apple meminta konfirmasi keamanan untuk aplikas
 3. Ketuk menu **Papan Ketik (Keyboards)** di bagian atas.
 4. Ketuk **Tambah Papan Ketik Baru... (Add New Keyboard...)**.
 5. Di bagian *Papan Ketik Pihak Ketiga (Third-Party Keyboards)*, ketuk **T9 Keyboard**.
-6. (Opsional) Ketuk nama *T9 Keyboard* lalu aktifkan *Izinkan Akses Penuh (Allow Full Access)* jika Anda ingin getaran haptik dan suara klik tombol bekerja maksimal.
+6. **PENTING (Wajib)**: Ketuk nama **T9 Keyboard**, lalu geser aktifkan **Izinkan Akses Penuh (Allow Full Access)**. Pilih **Izinkan (Allow)** saat pop-up konfirmasi muncul. Ini wajib agar sistem iOS tidak memblokir/menghentikan proses keyboard saat dipilih di chat.
 
 ---
 

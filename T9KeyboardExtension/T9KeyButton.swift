@@ -1,6 +1,9 @@
 import UIKit
 
-class T9KeyButton: UIButton {
+class T9KeyButton: UIButton, UIInputViewAudioFeedback {
+    var enableInputClicksWhenVisible: Bool {
+        return true
+    }
     let numberLabel = UILabel()
     let lettersLabel = UILabel()
     private let stackView = UIStackView()
@@ -82,16 +85,11 @@ class T9KeyButton: UIButton {
         }
     }
     
-    private static let feedbackGenerator: UIImpactFeedbackGenerator = {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.prepare()
-        return generator
-    }()
-    
     @objc private func playFeedback() {
-        T9KeyButton.feedbackGenerator.impactOccurred()
-        T9KeyButton.feedbackGenerator.prepare()
         UIDevice.current.playInputClick()
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
     
     override var isHighlighted: Bool {

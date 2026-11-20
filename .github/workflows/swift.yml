@@ -101,13 +101,30 @@ jobs:
         mkdir -p Payload
         cp -R "$APP_PATH" Payload/
 
-        # Pastikan Extension ada di dalam PlugIns
-        mkdir -p Payload/T9Keyboard.app/PlugIns
-        EXT_PATH=$(find build/DerivedData -name "T9KeyboardExtension.appex" -type d | head -n 1)
-        if [ -n "$EXT_PATH" ]; then
-          echo "Embedding extension from: $EXT_PATH"
-          cp -R "$EXT_PATH" Payload/T9Keyboard.app/PlugIns/
+        # Pastikan Extension ada di dalam PlugIns tanpa duplikasi/nested folder
+        if [ ! -d "Payload/T9Keyboard.app/PlugIns/T9KeyboardExtension.appex" ]; then
+          mkdir -p Payload/T9Keyboard.app/PlugIns
+          EXT_PATH=$(find build/DerivedData -name "T9KeyboardExtension.appex" -type d | grep -v "Payload" | head -n 1)
+          if [ -n "$EXT_PATH" ]; then
+            echo "Embedding extension from: $EXT_PATH"
+            cp -R "$EXT_PATH" Payload/T9Keyboard.app/PlugIns/
+          fi
+        else
+          echo "Extension already embedded in Payload/T9Keyboard.app/PlugIns/"
         fi
+
+        # Bersihkan jika ada folder nested appex yang tidak sengaja terbentuk
+        if [ -d "Payload/T9Keyboard.app/PlugIns/T9KeyboardExtension.appex/T9KeyboardExtension.appex" ]; then
+          echo "Removing accidental nested appex..."
+          rm -rf "Payload/T9Keyboard.app/PlugIns/T9KeyboardExtension.appex/T9KeyboardExtension.appex"
+        fi
+
+        # Lakukan Ad-Hoc code signing agar binary valid di sistem iOS/Sideloadly
+        echo "=== Performing Ad-Hoc Code Signing ==="
+        if [ -d "Payload/T9Keyboard.app/PlugIns/T9KeyboardExtension.appex" ]; then
+          codesign --force --deep --sign - "Payload/T9Keyboard.app/PlugIns/T9KeyboardExtension.appex" || true
+        fi
+        codesign --force --deep --sign - "Payload/T9Keyboard.app" || true
 
         echo "=== Payload contents ==="
         ls -la Payload/T9Keyboard.app/

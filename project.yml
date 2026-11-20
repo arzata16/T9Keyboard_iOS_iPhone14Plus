@@ -26,7 +26,7 @@ targets:
       base:
         INFOPLIST_FILE: T9Keyboard/Info.plist
         GENERATE_INFOPLIST_FILE: "NO"
-        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard
+        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboardhadi
         CODE_SIGN_STYLE: Manual
         CODE_SIGNING_ALLOWED: "NO"
         CODE_SIGNING_REQUIRED: "NO"
@@ -46,7 +46,7 @@ targets:
       base:
         INFOPLIST_FILE: T9KeyboardExtension/Info.plist
         GENERATE_INFOPLIST_FILE: "NO"
-        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboard.extension
+        PRODUCT_BUNDLE_IDENTIFIER: com.developer.t9keyboardhadi.extension
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "NO"
         CODE_SIGN_STYLE: Manual
         CODE_SIGNING_ALLOWED: "NO"

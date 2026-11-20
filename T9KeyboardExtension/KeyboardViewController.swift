@@ -1,6 +1,10 @@
 import UIKit
 
-class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
+public class KeyboardViewController: UIInputViewController, SuggestionBarDelegate, UIInputViewAudioFeedback {
+    
+    public var enableInputClicksWhenVisible: Bool {
+        return true
+    }
     
     // Engine & State
     private let engine = T9Engine.shared
@@ -17,16 +21,26 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
     // Cache tombol untuk update teks/mode
     private var keyButtons: [T9KeyButton] = []
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupEngineCallbacks()
     }
     
-    override func updateViewConstraints() {
-        super.updateViewConstraints()
-        // Tinggi optimal untuk iPhone 14 Plus (layar 6.7 inch)
-        let isLandscape = UIScreen.main.bounds.width > UIScreen.main.bounds.height
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateHeightConstraint()
+    }
+    
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate { [weak self] _ in
+            self?.updateHeightConstraint()
+        }
+    }
+    
+    private func updateHeightConstraint() {
+        let isLandscape = view.bounds.width > view.bounds.height
         let targetHeight: CGFloat = isLandscape ? 220 : 285
         
         if heightConstraint == nil {
@@ -38,7 +52,7 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
         }
     }
     
-    override func viewDidLayoutSubviews() {
+    public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTheme()
     }

@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     }
 
     private func setupUI() {
-        title = "T9 Keyboard"
+        title = "T9Keyboard Hadi"
         view.backgroundColor = UIColor.systemGroupedBackground
 
         scrollView.translatesAutoresizingMaskIntoConstraints = false
