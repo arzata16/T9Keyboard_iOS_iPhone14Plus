@@ -82,9 +82,15 @@ class T9KeyButton: UIButton {
         }
     }
     
-    @objc private func playFeedback() {
+    private static let feedbackGenerator: UIImpactFeedbackGenerator = {
         let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
+        generator.prepare()
+        return generator
+    }()
+    
+    @objc private func playFeedback() {
+        T9KeyButton.feedbackGenerator.impactOccurred()
+        T9KeyButton.feedbackGenerator.prepare()
         UIDevice.current.playInputClick()
     }
     

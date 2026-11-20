@@ -90,7 +90,9 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
         row1.addArrangedSubview(createKey("1", letters: ".,?!", isFunc: false))
         row1.addArrangedSubview(createKey("2", letters: "abc", isFunc: false))
         row1.addArrangedSubview(createKey("3", letters: "def", isFunc: false))
-        row1.addArrangedSubview(createActionKey("⌫", action: #selector(handleBackspace)))
+        let backspaceBtn = createActionKey("⌫", action: #selector(backspaceTouchDown))
+        backspaceBtn.addTarget(self, action: #selector(backspaceTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        row1.addArrangedSubview(backspaceBtn)
         keypadStackView.addArrangedSubview(row1)
         
         // Row 2: [4: GHI] [5: JKL] [6: MNO] [🌐 Next Keyboard / Globe]
@@ -109,11 +111,11 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
         row3.addArrangedSubview(createActionKey("↵", action: #selector(handleReturn)))
         keypadStackView.addArrangedSubview(row3)
         
-        // Row 4: [T9/ABC Mode] [⇧ Shift] [0: Spasi] [123 / Simbol]
+        // Row 4: [T9/ABC Mode] [0: Spasi] [⇧ Shift] [123 / Simbol]
         let row4 = createRowStackView()
         row4.addArrangedSubview(createActionKey("T9", action: #selector(toggleTypingMode)))
-        row4.addArrangedSubview(createActionKey("⇧", action: #selector(handleShift)))
         row4.addArrangedSubview(createKey("0", letters: "spasi", isFunc: false, customAction: #selector(handleSpace)))
+        row4.addArrangedSubview(createActionKey("⇧", action: #selector(handleShift)))
         row4.addArrangedSubview(createActionKey("123", action: #selector(toggleSymbolMode)))
         keypadStackView.addArrangedSubview(row4)
     }
@@ -129,9 +131,9 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
     private func createKey(_ number: String, letters: String, isFunc: Bool, customAction: Selector? = nil) -> T9KeyButton {
         let btn = T9KeyButton(number: number, letters: letters, isFunc: isFunc)
         if let custom = customAction {
-            btn.addTarget(self, action: custom, for: .touchUpInside)
+            btn.addTarget(self, action: custom, for: .touchDown)
         } else {
-            btn.addTarget(self, action: #selector(numberKeyTapped(_:)), for: .touchUpInside)
+            btn.addTarget(self, action: #selector(numberKeyTapped(_:)), for: .touchDown)
         }
         keyButtons.append(btn)
         return btn
@@ -139,7 +141,7 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
     
     private func createActionKey(_ title: String, action: Selector) -> T9KeyButton {
         let btn = T9KeyButton(number: title, letters: "", isFunc: true)
-        btn.addTarget(self, action: action, for: .touchUpInside)
+        btn.addTarget(self, action: action, for: .touchDown)
         keyButtons.append(btn)
         return btn
     }
@@ -152,14 +154,20 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
         return btn
     }
     
-    // MARK: - Engine Callbacks
+    // MARK: - Engine Callbacks (GO Keyboard Inline Multi-Tap)
     private func setupEngineCallbacks() {
-        engine.onMultiTapPreview = { [weak self] char in
+        engine.onMultiTapInsert = { [weak self] char in
+            self?.textDocumentProxy.insertText(char)
             self?.suggestionBar.setSuggestions([char])
         }
         
-        engine.onMultiTapCommit = { [weak self] char in
+        engine.onMultiTapReplace = { [weak self] char in
+            self?.textDocumentProxy.deleteBackward()
             self?.textDocumentProxy.insertText(char)
+            self?.suggestionBar.setSuggestions([char])
+        }
+        
+        engine.onMultiTapCommit = { [weak self] in
             self?.suggestionBar.setSuggestions([])
         }
     }
@@ -183,20 +191,45 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
     }
     
     @objc private func handleSpace() {
+        if isSymbolMode {
+            textDocumentProxy.insertText("0")
+            return
+        }
+        
         if engine.currentMode == .t9Predictive {
-            // Jika ada kata prediksi yang sedang aktif, commit kata pertama
-            let predictions = engine.getPredictions()
-            if let bestWord = predictions.first {
-                textDocumentProxy.insertText(bestWord + " ")
+            if !engine.currentDigits.isEmpty {
+                let predictions = engine.currentPredictions.isEmpty ? engine.getPredictions() : engine.currentPredictions
+                if let bestWord = predictions.first {
+                    textDocumentProxy.insertText(bestWord + " ")
+                } else {
+                    textDocumentProxy.insertText(" ")
+                }
+                engine.resetSequence()
+                suggestionBar.setSuggestions([])
             } else {
                 textDocumentProxy.insertText(" ")
             }
-            engine.resetSequence()
-            suggestionBar.setSuggestions([])
         } else {
             engine.commitPendingMultiTap()
             textDocumentProxy.insertText(" ")
         }
+    }
+    
+    private var backspaceTimer: Timer?
+    
+    @objc private func backspaceTouchDown() {
+        handleBackspace()
+        backspaceTimer?.invalidate()
+        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.35, repeats: false) { [weak self] _ in
+            self?.backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { [weak self] _ in
+                self?.handleBackspace()
+            }
+        }
+    }
+    
+    @objc private func backspaceTouchUp() {
+        backspaceTimer?.invalidate()
+        backspaceTimer = nil
     }
     
     @objc private func handleBackspace() {
@@ -204,26 +237,38 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
             let updated = engine.removeLastDigit()
             suggestionBar.setSuggestions(updated)
         } else {
+            if engine.hasActiveMultiTap {
+                engine.cancelMultiTap()
+                suggestionBar.setSuggestions([])
+            }
             textDocumentProxy.deleteBackward()
         }
     }
     
     @objc private func handleReturn() {
         if engine.currentMode == .t9Predictive && !engine.currentDigits.isEmpty {
-            let predictions = engine.getPredictions()
+            let predictions = engine.currentPredictions.isEmpty ? engine.getPredictions() : engine.currentPredictions
             if let first = predictions.first {
                 textDocumentProxy.insertText(first)
             }
             engine.resetSequence()
             suggestionBar.setSuggestions([])
+        } else if engine.hasActiveMultiTap {
+            engine.commitPendingMultiTap()
         }
         textDocumentProxy.insertText("\n")
     }
     
     @objc private func handleShift() {
         engine.toggleShift()
-        let updated = engine.getPredictions()
-        suggestionBar.setSuggestions(updated)
+        if engine.currentMode == .t9Predictive {
+            let updated = engine.getPredictions()
+            suggestionBar.setSuggestions(updated)
+        } else if engine.hasActiveMultiTap, let newChar = engine.currentMultiTapChar {
+            textDocumentProxy.deleteBackward()
+            textDocumentProxy.insertText(newChar)
+            suggestionBar.setSuggestions([newChar])
+        }
     }
     
     @objc private func toggleTypingMode(_ sender: T9KeyButton) {
@@ -235,6 +280,7 @@ class KeyboardViewController: UIInputViewController, SuggestionBarDelegate {
             sender.numberLabel.text = "T9"
         }
         engine.resetSequence()
+        engine.commitPendingMultiTap()
         suggestionBar.setSuggestions([])
     }
     

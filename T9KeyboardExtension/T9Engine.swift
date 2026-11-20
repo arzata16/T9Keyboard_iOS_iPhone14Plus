@@ -48,13 +48,26 @@ class T9Engine {
     var currentDigits: String = ""
     var currentMode: TypingMode = .t9Predictive
     var capState: CapitalizationState = .capitalized
+    var currentPredictions: [String] = []
     
-    // Multi-tap State
+    // Multi-tap State (Responsif ala T9 GO Keyboard)
     private var lastTappedKey: String?
     private var multiTapIndex: Int = 0
     private var multiTapTimer: Timer?
-    var onMultiTapCommit: ((String) -> Void)?
-    var onMultiTapPreview: ((String) -> Void)?
+    private let multiTapTimeout: TimeInterval = 0.4 // Timeout cepat & responsif (400ms)
+    
+    var onMultiTapInsert: ((String) -> Void)?
+    var onMultiTapReplace: ((String) -> Void)?
+    var onMultiTapCommit: (() -> Void)?
+    
+    var hasActiveMultiTap: Bool {
+        return lastTappedKey != nil
+    }
+    
+    var currentMultiTapChar: String? {
+        guard let key = lastTappedKey, let chars = digitToLetters[key] else { return nil }
+        return applyCapitalization(chars[multiTapIndex])
+    }
     
     init() {
         buildDictionaryIndex()
@@ -97,11 +110,15 @@ class T9Engine {
     /// Reset urutan kata saat ini (misal setelah spasi atau memilih saran)
     func resetSequence() {
         currentDigits = ""
+        currentPredictions = []
     }
     
     /// Mendapatkan daftar prediksi kata berdasarkan currentDigits
     func getPredictions() -> [String] {
-        guard !currentDigits.isEmpty else { return [] }
+        guard !currentDigits.isEmpty else {
+            currentPredictions = []
+            return []
+        }
         
         var results: [String] = []
         
@@ -125,7 +142,9 @@ class T9Engine {
         }
         
         // Terapkan Capitalization
-        return results.map { applyCapitalization($0) }
+        let capitalizedResults = results.map { applyCapitalization($0) }
+        currentPredictions = capitalizedResults
+        return capitalizedResults
     }
     
     private func generateFallbackWord(digits: String) -> String {
@@ -161,7 +180,7 @@ class T9Engine {
         }
     }
     
-    // MARK: - Multi-Tap Mode Methods
+    // MARK: - Multi-Tap Mode Methods (GO Keyboard Style)
     
     func handleMultiTap(key: String) {
         multiTapTimer?.invalidate()
@@ -170,27 +189,35 @@ class T9Engine {
         
         if lastTappedKey == key {
             multiTapIndex = (multiTapIndex + 1) % chars.count
+            let currentChar = applyCapitalization(chars[multiTapIndex])
+            onMultiTapReplace?(currentChar)
         } else {
-            // Commit huruf sebelumnya jika ganti tombol
+            // Commit karakter sebelumnya sebelum berpindah tombol
             commitPendingMultiTap()
             lastTappedKey = key
             multiTapIndex = 0
+            let currentChar = applyCapitalization(chars[multiTapIndex])
+            onMultiTapInsert?(currentChar)
         }
         
-        let currentChar = applyCapitalization(chars[multiTapIndex])
-        onMultiTapPreview?(currentChar)
-        
-        // Timer 0.8 detik untuk commit otomatis
-        multiTapTimer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: false) { [weak self] _ in
+        // Timer responsif (400ms) untuk auto-commit
+        multiTapTimer = Timer.scheduledTimer(withTimeInterval: multiTapTimeout, repeats: false) { [weak self] _ in
             self?.commitPendingMultiTap()
         }
     }
     
     func commitPendingMultiTap() {
         multiTapTimer?.invalidate()
-        guard let key = lastTappedKey, let chars = digitToLetters[key] else { return }
-        let char = applyCapitalization(chars[multiTapIndex])
-        onMultiTapCommit?(char)
+        multiTapTimer = nil
+        guard lastTappedKey != nil else { return }
+        lastTappedKey = nil
+        multiTapIndex = 0
+        onMultiTapCommit?()
+    }
+    
+    func cancelMultiTap() {
+        multiTapTimer?.invalidate()
+        multiTapTimer = nil
         lastTappedKey = nil
         multiTapIndex = 0
     }
